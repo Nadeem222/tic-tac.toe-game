@@ -6,6 +6,7 @@ let msgContainer = document.querySelector(".msgContainer")
 
 
 let turn0 = true;
+let moves = 0;
 
 const winPatterns = [
     [0, 1, 2],
@@ -28,15 +29,18 @@ boxes.forEach((box) => {
             turn0= true
         }
         box.disabled = true;
+        moves++
 
         checkWinner()
     })
 })
 
 const resetGame = () =>{
-    turn0 = false;
+    turn0 = !turn0;
+    moves = 0
     enabledBoxes()
     msgContainer.classList.add("hide")
+    document.querySelector(".container").style.display="flex"
 }
 
 const disabledBoxes = () =>{
@@ -52,7 +56,7 @@ const enabledBoxes = () =>{
     }
 }
 const showWinner = (winner) =>{
-    msg.innerHTML = `<h2> Congratulation! Winner is ${winner}</h2>`
+    msg.innerHTML = `<h2> Congratulation! Winner is Player ${winner}</h2>`
     disabledBoxes()
 
 }
@@ -65,12 +69,18 @@ const checkWinner = () =>{
 
         if(pos1Val != "" && pos2Val != "" && pos3Val != ""){
             if(pos1Val === pos2Val && pos2Val === pos3Val){
-                console.log("winner "+ pos1Val)
-                showWinner(pos1Val)
+                // console.log("winner "+ pos1Val)
                 msgContainer.classList.remove("hide")
-            }  
+                document.querySelector(".container").style.display="none"
+                showWinner(pos1Val)
+                return;
+            }
         }
     }
+    if (moves === boxes.length) {
+        msgContainer.classList.remove("hide");
+        msg.innerHTML = "<h2>It's a tie!</h2>";
+      }
 }
 
 newGameBtn.addEventListener("click" , resetGame)
